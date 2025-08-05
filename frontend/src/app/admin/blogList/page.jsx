@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import BlogTableItem from '@/Components/AdminComponents/BlogTableItem';
 import { useAppContext } from '@/context/AppContext';
 import toast from 'react-hot-toast';
-const baseURL = process.local.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
 
 const ListBlog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,7 +11,7 @@ const ListBlog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const token = localStorage.getItem('token'); // or from context
+      const token = localStorage.getItem('token'); 
 
              const { data } = await axios.get(`${baseURL}/api/admin/blogs?company=QuoreB2B`, {
          headers: {

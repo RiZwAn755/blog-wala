@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Blog from '../models/BlogModel.js';
 import Comment from '../models/CommentModel.js';
+import EmailModel from '../models/EmailModel.js';
 
 export const adminLogin = async (req, res)=>{
     try {
@@ -73,6 +74,25 @@ export const approveCommentById = async (req, res) =>{
         const {id} = req.body;
         await Comment.findByIdAndUpdate(id, {isApproved: true});
         res.json({success: true, message:"Comment approved successfully" })
+    } catch (error) {
+       res.json({success: false, message: error.message}) 
+    }
+}
+
+export const getAllEmails = async (req, res) => {
+    try {
+        const emails = await EmailModel.find({}).sort({date: -1});
+        res.json({success: true, emails})
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+}
+
+export const deleteEmailById = async (req, res) => {
+    try {
+        const {id} = req.query;
+        await EmailModel.findByIdAndDelete(id);
+        res.json({success: true, msg: "Email deleted successfully" })
     } catch (error) {
        res.json({success: false, message: error.message}) 
     }

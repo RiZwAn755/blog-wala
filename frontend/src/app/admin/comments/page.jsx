@@ -4,7 +4,7 @@ import { comments_data } from '@/Assets/assets'
 import CommentTableItem from '@/Components/AdminComponents/CommentTableItem'
 import { useAppContext } from '@/context/AppContext'
 import toast from 'react-hot-toast'
-const baseURL = process.local.env.NEXT_PUBLIC_BASE_URL ;
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL ;
 
 const Comments = () => {
 

@@ -2,6 +2,7 @@ import fs from 'fs';
 import imagekit from '../config/imagekit.js';
 import Blog from '../models/BlogModel.js';
 import Comment from '../models/CommentModel.js';
+import EmailModel from '../models/EmailModel.js';
 import main from '../config/gemini.js';
 
 // Helper function to slugify the blog title
@@ -234,6 +235,40 @@ export const getBlogBySlug = async (req, res) => {
     res.json({ success: true, blog });
   } catch (error) {
     console.error(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const subscribeEmail = async (req, res) => {
+  try {
+    console.log('Request body:', req.body);
+    console.log('Request headers:', req.headers);
+    
+    // Handle both FormData and JSON
+    let email;
+    if (req.body && req.body.email) {
+      email = req.body.email;
+    } else if (req.body && typeof req.body === 'object') {
+      // Try to get email from form data
+      email = req.body.email || req.body.get?.('email');
+    } else {
+      return res.json({ success: false, message: "Email is required" });
+    }
+    
+    if (!email) {
+      return res.json({ success: false, message: "Email is required" });
+    }
+    
+    // Check if email already exists
+    const existingEmail = await EmailModel.findOne({ email });
+    if (existingEmail) {
+      return res.json({ success: false, message: "Email already subscribed" });
+    }
+    
+    await EmailModel.create({ email });
+    res.json({ success: true, msg: "Email subscribed successfully" });
+  } catch (error) {
+    console.error('Subscribe email error:', error);
     res.json({ success: false, message: error.message });
   }
 };

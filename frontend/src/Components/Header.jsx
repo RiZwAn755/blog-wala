@@ -21,16 +21,18 @@ const Header = () => {
     formData.append("email", email);
     
     try {
-      const response = await axios.post('/api/email', formData);
+      const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+      const response = await axios.post(`${baseURL}/api/email`, formData);
       if (response.data.success) {
         toast.success(response.data.msg);
         setEmail("");
         inputRef.current.value = '';
       } else {
-        toast.error("Error");
+        toast.error(response.data.message || "Error");
       }
     } catch (error) {
       toast.error("Error occurred while subscribing");
+      console.error('Subscribe error:', error);
     }
   };
 

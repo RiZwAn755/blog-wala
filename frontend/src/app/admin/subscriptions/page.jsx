@@ -4,23 +4,37 @@ import SubsTableItem from '@/Components/AdminComponents/SubsTableItem'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-const baseURL = process.local.env.NEXT_PUBLIC_BASE_URL;
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
 
 const Page = () => {
   const [emails, setEmails] = useState([])
 
   const fetchEmails = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/email`)
-      setEmails(response.data.emails)
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${baseURL}/api/admin/emails`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (response.data.success) {
+        setEmails(response.data.emails)
+      } else {
+        toast.error('Failed to load subscriptions')
+      }
     } catch (error) {
       toast.error('Failed to load subscriptions')
+      console.error('Fetch emails error:', error)
     }
   }
 
   const deleteEmail = async (mongoId) => {
     try {
-      const response = await axios.delete('/api/email', {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${baseURL}/api/admin/emails`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           id: mongoId,
         },
@@ -33,6 +47,7 @@ const Page = () => {
       }
     } catch (error) {
       toast.error('Server error')
+      console.error('Delete email error:', error)
     }
   }
 
