@@ -19,6 +19,7 @@ const Header = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("email", email);
+    formData.append("company", "Main Website"); // Default company for header subscription
     
     try {
       const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";

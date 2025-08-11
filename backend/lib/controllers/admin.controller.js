@@ -82,7 +82,7 @@ export const approveCommentById = async (req, res) =>{
 export const getAllEmails = async (req, res) => {
     try {
         const emails = await EmailModel.find({}).sort({date: -1});
-        res.json({success: true, emails})
+        res.json({success: true, emails })
     } catch (error) {
         res.json({success: false, message: error.message})
     }
